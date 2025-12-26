@@ -1,53 +1,14 @@
-# Calendar Suite Project
+# Calendar Suite (Term Project)
 
-## 📌 프로젝트 개요
-Calendar Suite는 Web / Mobile 환경에서 동일한 일정 데이터를 관리할 수 있는 서비스입니다.  
-Firebase Authentication을 통한 로그인과 Firestore를 사용하여 실시간으로 데이터를 동기화합니다.
+Web과 Mobile 환경에서 일정을 통합 관리할 수 있는 캘린더 서비스입니다.
+Firebase를 통해 실시간으로 데이터가 동기화됩니다.
 
-## 🧱 전체 아키텍처
-- **Web App**: React (Vite) - `apps/web`
-- **Mobile App**: React Native (Expo) - `apps/mobile`
-- **Backend / DB**: Firebase (Authentication + Firestore)
-
-## 📁 Repository 구조
-```
-repo-root/
-├─ apps/
-│ ├─ web/    # React Web App (Vite)
-│ └─ mobile/ # React Native App (Expo)
-└─ README.md
-```
-
-## ▶️ 실행 방법
-
-### 1. Web App 실행
-```bash
-cd apps/web
-cp .env.example .env  # 환경 변수 설정 (기본값 포함됨)
-npm install
-npm run dev
-```
-브라우저에서 `http://localhost:5173` 접속
-
-### 2. Mobile App 실행
-```bash
-cd apps/mobile
-npm install
-npx expo start
-```
-- `a`를 눌러 Android 에뮬레이터에서 실행하거나,
-- Expo Go 앱으로 QR 코드를 스캔하여 실행
-
-## 📊 주요 기능
-- **일정 관리**: 월간/일간 뷰, 일정 생성/수정/삭제 (CRUD), **시간 설정(Time Picker)**
-- **할일 관리**: 할일(Task) 생성 및 완료 체크, D-Day 표시
-- **메모 관리**: 간단한 메모(Memo) 작성 및 조회
-- **데이터 연동**: Web과 Mobile에서 동일한 계정으로 로그인 시 데이터 실시간 동기화
-- **사용자 편의**: 다크 모드(Web), 검색 기능, 일정 색상 지정, 완료 축하 효과(Confetti)
-
-## 🔐 인증 정보
-- **Web**: Google 소셜 로그인, Email/Password 로그인 지원
-- **Mobile**: Google 소셜 로그인, Email/Password 로그인 지원
+## 📱 주요 기능
+- **일정 관리 (Event)**: 날짜 및 시간(Time Picker) 설정 가능, 색상 지정
+- **할일 관리 (Task)**: 체크박스로 완료 여부 관리
+- **메모 관리 (Memo)**: 간단한 텍스트 메모 작성 (달력에 노란색 점 표시)
+- **실시간 동기화**: Web에서 작성한 내용이 Mobile에 즉시 반영 (반대도 동일)
+- **인증**: Google 소셜 로그인, Email/Password 로그인 지원
 
 ## ☁️ JCloud 배포 (Docker)
 Web App은 Docker를 사용하여 JCloud에 배포할 수 있습니다. `apps/web` 디렉토리에 `Dockerfile`이 포함되어 있습니다.
@@ -62,3 +23,29 @@ Web App은 Docker를 사용하여 JCloud에 배포할 수 있습니다. `apps/we
    ```bash
    docker run -d -p 80:80 calendar-web
    ```
+
+## 🚀 실행 가이드 (요약)
+
+### 1. 설치 및 실행
+**Web App**:
+```bash
+cd apps/web
+cp .env.example .env  # 환경 변수 설정 (기본값 포함됨)
+npm install
+npm run dev
+```
+브라우저에서 `http://localhost:5173` 접속
+
+**Mobile App**:
+```bash
+cd apps/mobile
+npm install
+npx expo start
+```
+Expo Go 앱으로 QR 코드 스캔
+
+### 2. 테스트용 계정
+바로 로그인하여 기능을 테스트해볼 수 있는 계정입니다.
+- **Email**: `demo@test.com`
+- **Password**: `123456`
+*(Web과 Mobile 모두 동일한 계정으로 로그인하면 데이터가 연동됩니다.)*
