@@ -24,6 +24,9 @@ export default function DayViewModal(props: Props) {
         return tasks.filter((t) => t.due_at.slice(0, 10) === dateISO);
     }, [tasks, dateISO]);
 
+    const taskCount = dayTasks.filter(t => t.type !== 'MEMO').length;
+    const memoCount = dayTasks.filter(t => t.type === 'MEMO').length;
+
     if (!open) return null;
 
     return (
@@ -32,7 +35,7 @@ export default function DayViewModal(props: Props) {
                 <div className="sheet-head">
                     <div>
                         <div className="sheet-title">{dateISO}</div>
-                        <div className="sheet-sub">{dayEvents.length} 일정 · {dayTasks.length} 할일</div>
+                        <div className="sheet-sub">{dayEvents.length} 일정 · {taskCount} 할일 · {memoCount} 메모</div>
                     </div>
                     <button className="sheet-x" onClick={onClose}>✕</button>
                 </div>
