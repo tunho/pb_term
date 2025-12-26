@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Modal, Alert, SafeAreaView } from 'react-native';
 import { auth, db } from './firebase';
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, type User, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { collection, query, where, onSnapshot, addDoc, Timestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Calendar } from 'react-native-calendars';
 import * as Google from 'expo-auth-session/providers/google';
@@ -392,7 +392,7 @@ export default function App() {
               <Text style={styles.cardTime}>
                 {item.type === 'event'
                   ? (item.is_all_day ? "종일" : `${formatTime(item.start_at)} ~ ${formatTime(item.end_at)}`)
-                  : item.type.toUpperCase()}
+                  : (item.type || "").toUpperCase()}
               </Text>
               {item.type !== 'memo' && item.description ? <Text style={styles.cardDesc}>{item.description}</Text> : null}
             </View>
