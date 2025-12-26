@@ -23,6 +23,7 @@ repo-root/
 ### 1. Web App 실행
 ```bash
 cd apps/web
+cp .env.example .env  # 환경 변수 설정 (기본값 포함됨)
 npm install
 npm run dev
 ```
@@ -38,14 +39,15 @@ npx expo start
 - Expo Go 앱으로 QR 코드를 스캔하여 실행
 
 ## 📊 주요 기능
-- **일정 관리**: 월간/일간 뷰, 일정 생성/수정/삭제 (CRUD)
+- **일정 관리**: 월간/일간 뷰, 일정 생성/수정/삭제 (CRUD), **시간 설정(Time Picker)**
 - **할일 관리**: 할일(Task) 생성 및 완료 체크, D-Day 표시
+- **메모 관리**: 간단한 메모(Memo) 작성 및 조회
 - **데이터 연동**: Web과 Mobile에서 동일한 계정으로 로그인 시 데이터 실시간 동기화
 - **사용자 편의**: 다크 모드(Web), 검색 기능, 일정 색상 지정, 완료 축하 효과(Confetti)
 
 ## 🔐 인증 정보
-- **Web**: Google 소셜 로그인 지원
-- **Mobile**: Email/Password 로그인 지원 (테스트 용이성)
+- **Web**: Google 소셜 로그인, Email/Password 로그인 지원
+- **Mobile**: Google 소셜 로그인, Email/Password 로그인 지원
 
 ## ☁️ JCloud 배포 (Docker)
 Web App은 Docker를 사용하여 JCloud에 배포할 수 있습니다. `apps/web` 디렉토리에 `Dockerfile`이 포함되어 있습니다.
