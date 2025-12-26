@@ -1,5 +1,6 @@
 // apps/web/src/components/Calendar/MonthGrid.tsx
 import type { Event, Task } from "../../lib/api";
+import { getHoliday } from "../../lib/date";
 
 export type ChipTarget =
   | { kind: "event"; event: Event }
@@ -22,18 +23,6 @@ function isoDate(d: Date) {
   return `${y}-${m}-${dd}`;
 }
 
-function getDDay(targetDate: string) {
-  const target = new Date(targetDate.slice(0, 10));
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
-  const diffTime = target.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "D-Day";
-  if (diffDays > 0) return `D-${diffDays}`;
-  return `D+${Math.abs(diffDays)}`;
-}
 
 export default function MonthGrid(props: Props) {
   const { rows, events, tasks, selectedISO, onPickDate, onPickItem } = props;
@@ -47,13 +36,26 @@ export default function MonthGrid(props: Props) {
             const dayEvents = events.filter((e) => e.start_at.slice(0, 10) === dateISO);
             const dayTasks = tasks.filter((t) => t.due_at.slice(0, 10) === dateISO);
 
+            const holidayName = getHoliday(cell.date);
+            const isHoliday = !!holidayName;
+            const isSunday = cell.date.getDay() === 0;
+
             return (
               <div
                 key={di}
                 className={["day-cell", cell.inMonth ? "in" : "out", dateISO === selectedISO ? "selected" : ""].join(" ")}
                 onClick={() => onPickDate(dateISO)}
               >
-                <div className="day-num">{cell.date.getDate()}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div className="day-num" style={{ color: isHoliday || isSunday ? "var(--danger)" : undefined }}>
+                    {cell.date.getDate()}
+                  </div>
+                  {holidayName && (
+                    <div style={{ fontSize: 10, color: "var(--danger)", fontWeight: 600, marginTop: 2, marginRight: 2 }}>
+                      {holidayName}
+                    </div>
+                  )}
+                </div>
 
                 <div className="chips">
                   {dayEvents.map((e) => (
@@ -72,19 +74,23 @@ export default function MonthGrid(props: Props) {
 
                   {dayTasks.map((t) => {
                     const kind = (t.type ?? "").toUpperCase() === "MEMO" ? "memo" : "task";
-                    const dDay = kind === "task" && t.status !== "COMPLETED" ? getDDay(t.due_at) : null;
+                    const isDone = t.status === "COMPLETED";
 
                     return (
                       <button
                         key={t.id}
-                        className={["chip", kind === "memo" ? "chip-memo" : "chip-task", t.status === "COMPLETED" ? "done" : ""].join(" ")}
+                        className={["chip", kind === "memo" ? "chip-memo-text" : "chip-task-check", isDone ? "done" : ""].join(" ")}
                         onClick={(ev) => {
                           ev.stopPropagation();
                           onPickItem?.({ kind, task: t } as ChipTarget);
                         }}
                       >
-                        {dDay && <span style={{ marginRight: 4, fontWeight: 800, fontSize: "0.9em" }}>{dDay}</span>}
-                        {t.title}
+                        {kind === "task" && (
+                          <span style={{ marginRight: 4, fontSize: "1.1em", lineHeight: 1 }}>
+                            {isDone ? "☑" : "☐"}
+                          </span>
+                        )}
+                        <span style={{ textDecoration: isDone ? "line-through" : "none" }}>{t.title}</span>
                       </button>
                     );
                   })}

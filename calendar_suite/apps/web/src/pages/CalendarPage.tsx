@@ -154,7 +154,6 @@ export default function CalendarPage() {
 
   useEffect(() => {
     void loadCalendars();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

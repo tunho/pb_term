@@ -305,6 +305,90 @@ button {
   opacity: 0.6;
 }
 
+/* New Chip Styles for Task/Memo distinction */
+.chip-memo-text {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid transparent;
+  padding: 0 2px;
+}
+
+.chip-task-check {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid transparent;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+}
+
+.chip-task-check.done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 80px;
+  /* Above bottom nav on mobile */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--panel);
+  color: var(--fg);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-success {
+  border-left: 4px solid var(--primary);
+}
+
+.toast-error {
+  border-left: 4px solid var(--danger);
+}
+
+.toast-info {
+  border-left: 4px solid var(--muted);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 640px) {
+  .toast-container {
+    bottom: 30px;
+    right: 30px;
+    left: auto;
+    transform: none;
+  }
+}
+
 /* =========================
    Modals & Sheets
    ========================= */

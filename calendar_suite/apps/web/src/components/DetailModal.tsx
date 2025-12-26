@@ -3,6 +3,7 @@ import { useState } from "react";
 import { eventsApi, taskApi } from "../lib/api";
 import { fireConfetti } from "../lib/confetti";
 import { formatApiError } from "../lib/error";
+import { useToast } from "../contexts/ToastContext";
 import type { ChipTarget } from "./Calendar/MonthGrid";
 import type { Event, Task } from "../lib/api";
 
@@ -22,6 +23,7 @@ type Props = {
 
 export default function DetailModal(props: Props) {
   const { open, target, onClose } = props;
+  const { addToast } = useToast();
 
   // ✅ null-safe
   const tgt = target;
@@ -57,15 +59,18 @@ export default function DetailModal(props: Props) {
         await eventsApi.remove(tgt.event.id);
         props.onDeleted({ kind: "event", id: tgt.event.id });
         onClose();
+        addToast("일정이 삭제되었습니다.", "success");
         return;
       }
 
       await taskApi.remove(tgt.task.id);
       props.onDeleted({ kind: tgt.kind, id: tgt.task.id });
       onClose();
+      addToast("항목이 삭제되었습니다.", "success");
     } catch (e) {
       const fe = formatApiError(e);
       setErr(fe.body ?? fe.title);
+      addToast("삭제에 실패했습니다.", "error");
     } finally {
       setSaving(false);
     }
@@ -87,6 +92,7 @@ export default function DetailModal(props: Props) {
     } catch (e) {
       const fe = formatApiError(e);
       setErr(fe.body ?? fe.title);
+      addToast("상태 변경에 실패했습니다.", "error");
     } finally {
       setSaving(false);
     }
@@ -129,24 +135,6 @@ export default function DetailModal(props: Props) {
                   {tgt.task.status === "COMPLETED" ? "미완료로 변경" : "완료하기"}
                 </button>
               )}
-
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  if (!tgt) return;
-                  const title = tgt.kind === 'event' ? tgt.event.title : tgt.task.title;
-                  const time = tgt.kind === 'event'
-                    ? `${tgt.event.start_at} ~ ${tgt.event.end_at}`
-                    : `Due: ${tgt.task.due_at}`;
-                  const desc = (tgt.kind === 'event' ? tgt.event.description : tgt.task.description) ?? '';
-                  const text = `[${title}]\n${time}\n${desc}`;
-                  navigator.clipboard.writeText(text);
-                  alert("일정 내용이 복사되었습니다.");
-                }}
-                style={{ flex: 1 }}
-              >
-                복사
-              </button>
 
               <button className="btn danger" onClick={onDelete} disabled={saving} style={{ flex: 1 }}>
                 삭제

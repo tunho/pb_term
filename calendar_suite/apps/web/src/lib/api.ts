@@ -1,4 +1,3 @@
-// apps/web/src/lib/api.ts
 import {
   collection,
   query,
@@ -9,7 +8,10 @@ import {
   deleteDoc,
   doc,
   Timestamp,
-  getDoc
+  getDoc,
+  QueryDocumentSnapshot,
+  DocumentData,
+  DocumentSnapshot
 } from "firebase/firestore";
 import { db, firebaseAuth } from "./firebase";
 
@@ -69,8 +71,9 @@ const getUid = () => {
 };
 
 // Helper to convert Firestore doc to Event
-const docToEvent = (d: any): Event => {
+const docToEvent = (d: DocumentSnapshot<DocumentData> | QueryDocumentSnapshot<DocumentData>): Event => {
   const data = d.data();
+  if (!data) throw new Error("Document data missing");
   return {
     id: d.id,
     calendar_id: data.calendar_id,
@@ -84,8 +87,9 @@ const docToEvent = (d: any): Event => {
 };
 
 // Helper to convert Firestore doc to Task
-const docToTask = (d: any): Task => {
+const docToTask = (d: DocumentSnapshot<DocumentData> | QueryDocumentSnapshot<DocumentData>): Task => {
   const data = d.data();
+  if (!data) throw new Error("Document data missing");
   return {
     id: d.id,
     calendar_id: data.calendar_id,
@@ -245,31 +249,16 @@ export const taskApi = {
 
 // notes stub
 export const notesApi = {
-  async create(input: any): Promise<Note> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async create(_input: unknown): Promise<Note> {
     throw new Error("Not implemented");
   },
-  async update(id: string, input: any): Promise<Note> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async update(_id: string, _input: unknown): Promise<Note> {
     throw new Error("Not implemented");
   },
-  async remove(id: string): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async remove(_id: string): Promise<void> {
     throw new Error("Not implemented");
   },
 };
-
-// Auth API stub (not used anymore in AuthProvider but kept for compatibility if needed)
-export const authApi = {
-  async firebaseExchange(idToken: string): Promise<void> {
-    // No-op
-  },
-  async refresh(): Promise<void> {
-    // No-op
-  },
-  async me(): Promise<any> {
-    // No-op
-    return {};
-  },
-};
-
-export function setOnAuthFailure(cb: (() => void) | null) {
-  // No-op
-}

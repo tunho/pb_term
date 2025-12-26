@@ -84,3 +84,43 @@ export function getDDay(targetDate: string) {
   if (diffDays > 0) return `D-${diffDays}`;
   return `D+${Math.abs(diffDays)}`;
 }
+
+// Simple holiday list for 2024-2025 (KR)
+const HOLIDAYS: Record<string, string> = {
+  "01-01": "신정",
+  "03-01": "3.1절",
+  "05-05": "어린이날",
+  "06-06": "현충일",
+  "08-15": "광복절",
+  "10-03": "개천절",
+  "10-09": "한글날",
+  "12-25": "성탄절",
+};
+
+// Lunar holidays (approximate for 2024-2025)
+const LUNAR_HOLIDAYS: Record<string, string> = {
+  "2024-02-09": "설날 연휴",
+  "2024-02-10": "설날",
+  "2024-02-11": "설날 연휴",
+  "2024-02-12": "대체공휴일",
+  "2024-05-15": "부처님오신날",
+  "2024-09-16": "추석 연휴",
+  "2024-09-17": "추석",
+  "2024-09-18": "추석 연휴",
+  "2025-01-28": "설날 연휴",
+  "2025-01-29": "설날",
+  "2025-01-30": "설날 연휴",
+  "2025-05-05": "부처님오신날",
+  "2025-05-06": "대체공휴일",
+  "2025-10-06": "추석",
+};
+
+export function getHoliday(d: Date): string | null {
+  const iso = isoDate(d);
+  const md = iso.slice(5); // MM-DD
+
+  if (LUNAR_HOLIDAYS[iso]) return LUNAR_HOLIDAYS[iso];
+  if (HOLIDAYS[md]) return HOLIDAYS[md];
+
+  return null;
+}

@@ -46,3 +46,17 @@ npx expo start
 ## 🔐 인증 정보
 - **Web**: Google 소셜 로그인 지원
 - **Mobile**: Email/Password 로그인 지원 (테스트 용이성)
+
+## ☁️ JCloud 배포 (Docker)
+Web App은 Docker를 사용하여 JCloud에 배포할 수 있습니다. `apps/web` 디렉토리에 `Dockerfile`이 포함되어 있습니다.
+
+1. **Docker 이미지 빌드**
+   ```bash
+   cd apps/web
+   docker build -t calendar-web .
+   ```
+
+2. **Docker 컨테이너 실행**
+   ```bash
+   docker run -d -p 80:80 calendar-web
+   ```

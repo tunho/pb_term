@@ -4,6 +4,7 @@ import type { Event, Task } from "../lib/api";
 import { eventsApi, notesApi, taskApi } from "../lib/api";
 import { localDateTimeToSend } from "../lib/datetime";
 import { formatApiError } from "../lib/error";
+import { useToast } from "../contexts/ToastContext";
 
 export default function ComposerSheet(props: {
   open: boolean;
@@ -15,6 +16,7 @@ export default function ComposerSheet(props: {
   upsertTask: (t: Task) => void; // ✅ any 제거
 }) {
   const { open, dateISO: selectedDateISO, defaultCalendarId, onClose, onSaved, upsertEvent, upsertTask } = props;
+  const { addToast } = useToast();
 
   const [tab, setTab] = useState<"event" | "task" | "memo">("event");
   const [saving, setSaving] = useState(false);
@@ -62,6 +64,7 @@ export default function ComposerSheet(props: {
         upsertEvent(created);
         onClose();
         onSaved?.();
+        addToast("일정이 저장되었습니다.", "success");
         return;
       }
 
@@ -84,6 +87,7 @@ export default function ComposerSheet(props: {
         upsertTask(created);
         onClose();
         onSaved?.();
+        addToast("할일이 저장되었습니다.", "success");
         return;
       }
 
@@ -118,9 +122,11 @@ export default function ComposerSheet(props: {
 
       onClose();
       onSaved?.();
+      addToast("메모가 저장되었습니다.", "success");
     } catch (e) {
       const fe = formatApiError(e);
       setErr(fe.body ?? fe.title);
+      addToast("저장에 실패했습니다.", "error");
     } finally {
       setSaving(false);
     }
