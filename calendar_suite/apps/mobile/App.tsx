@@ -8,6 +8,7 @@ import { Calendar } from 'react-native-calendars';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { makeRedirectUri } from 'expo-auth-session';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -40,7 +41,12 @@ export default function App() {
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: '788435475840-o2gk865hsl5tb0plg2lmpg38amiqcse9.apps.googleusercontent.com',
+    redirectUri: makeRedirectUri({ useProxy: true }),
   });
+
+  useEffect(() => {
+    console.log("Redirect URI:", makeRedirectUri({ useProxy: true }));
+  }, []);
 
   useEffect(() => {
     if (response?.type === 'success') {
@@ -111,6 +117,15 @@ export default function App() {
       }
     });
 
+    memos.forEach(m => {
+      if (!m.created_at) return;
+      const date = m.created_at.toDate().toISOString().slice(0, 10);
+      if (date) {
+        if (marks[date]) marks[date].dotColor = 'purple';
+        else marks[date] = { marked: true, dotColor: '#f59e0b' };
+      }
+    });
+
     if (marks[selectedDate]) {
       marks[selectedDate] = { ...marks[selectedDate], selected: true, selectedColor: '#3b82f6' };
     } else {
@@ -149,12 +164,13 @@ export default function App() {
       setTitle("");
       setDesc("");
       setItemType("event");
-      const now = new Date();
-      now.setMinutes(0, 0, 0);
-      const start = new Date(now);
-      start.setHours(now.getHours() + 1);
+
+      const start = new Date(selectedDate);
+      start.setHours(9, 0, 0, 0);
+
       const end = new Date(start);
-      end.setHours(start.getHours() + 1);
+      end.setHours(10, 0, 0, 0);
+
       setStartTime(start);
       setEndTime(end);
     }
@@ -313,6 +329,15 @@ export default function App() {
             {isRegistering ? "Already have an account? Login" : "No account? Register"}
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          const uri = makeRedirectUri({ useProxy: true });
+          console.log("Redirect URI:", uri);
+          Alert.alert("Redirect URI", uri);
+        }} style={{ marginTop: 20 }}>
+          <Text style={{ color: '#aaa' }}>Check Redirect URI (Debug)</Text>
+        </TouchableOpacity>
+
         <StatusBar style="auto" />
       </View>
     );
