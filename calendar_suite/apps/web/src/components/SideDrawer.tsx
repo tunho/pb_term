@@ -2,8 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getStoredThemeMode, setStoredThemeMode, applyTheme, ThemeMode } from "../lib/theme";
 import { tokenStorage } from "../lib/storage";
-import { getAuth, signOut } from "firebase/auth";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../lib/firebase";
 
 type Calendar = { id: string; name?: string | null };
@@ -30,10 +29,10 @@ export default function SideDrawer(props: {
   const { open, onClose, calendars, enabledCalendarIds, onToggleCalendar } = props;
 
   const [theme, setTheme] = useState<ThemeMode>(() => getStoredThemeMode());
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (u) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (u: any | null) => {
       setUser(u);
     });
     return () => unsubscribe();
@@ -99,7 +98,7 @@ export default function SideDrawer(props: {
         <div className="drawer-section">
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, color: "var(--muted)" }}>테마 설정</div>
           <div className="segmented-control">
-            {(["system", "light", "dark"] as ThemeMode[]).map((m) => (
+            {(["auto", "light", "dark"] as ThemeMode[]).map((m) => (
               <button
                 key={m}
                 className={`segment-btn ${theme === m ? "active" : ""}`}
@@ -109,7 +108,7 @@ export default function SideDrawer(props: {
                   applyTheme(m);
                 }}
               >
-                {m === "system" ? "자동" : m === "light" ? "라이트" : "다크"}
+                {m === "auto" ? "자동" : m === "light" ? "라이트" : "다크"}
               </button>
             ))}
           </div>

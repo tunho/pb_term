@@ -1,6 +1,6 @@
 // apps/web/src/auth/AuthProvider.tsx
 import { useEffect, useMemo, useState } from "react";
-import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { firebaseAuth } from "../lib/firebase";
 import { themeStorage, type ThemeMode } from "../lib/storage";
 import type { AuthStatus, ServerUser } from "./types";
@@ -17,7 +17,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [themeMode]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user: User | null) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user: any | null) => {
       if (user) {
         setMe({
           id: user.uid,
